@@ -10,11 +10,14 @@ class ActiveQuery extends DbActiveQuery
     /**
      * Filter valid data
      *
+     * @param  bool     $status
      * @return static
      */
-    public function valid()
+    public function valid($status = true)
     {
-        return $this->andWhere([ActiveRecord::SOFT_DELETE => ActiveRecord::IS_VALID]);
+        return $status
+            ? $this->andWhere([ActiveRecord::SOFT_DELETE => ActiveRecord::IS_VALID])
+            : $this->andWhere([ActiveRecord::SOFT_DELETE => ActiveRecord::IS_INVALID]);
     }
 
     /**
@@ -24,7 +27,7 @@ class ActiveQuery extends DbActiveQuery
      */
     public function invalid()
     {
-        return $this->andWhere([ActiveRecord::SOFT_DELETE => ActiveRecord::IS_INVALID]);
+        return $this->valid(false);
     }
 
     /**
