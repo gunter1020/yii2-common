@@ -15,11 +15,6 @@ use yii\db\ActiveRecord as DbActiveRecord;
 class ActiveRecord extends DbActiveRecord
 {
     /**
-     * @var string|null field for primary key
-     */
-    protected $primaryKey = 'id';
-
-    /**
      * @var string|null field for uuid key
      */
     protected $uuidAttribute = 'uuid';
