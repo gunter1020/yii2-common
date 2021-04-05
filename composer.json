@@ -1,0 +1,31 @@
+{
+    "name": "gunter1020/yii2-common",
+    "description": "Yii 2 Common Lib",
+    "keywords": [
+        "yii",
+        "extension",
+        "common"
+    ],
+    "type": "yii2-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gunter Chou",
+            "email": "abcd2221925@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "gunter1020\\yii2\\common\\": "src"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}
