@@ -30,20 +30,22 @@ class ActiveQuery extends DbActiveQuery
     /**
      * Returns a single row of result.
      *
+     * @param  Connection|null $db
      * @return array|null
      */
-    public function oneArray()
+    public function oneArray($db = null)
     {
-        return $this->asArray()->one();
+        return $this->asArray()->one($db);
     }
 
     /**
      * Returns a multiple row of result.
      *
+     * @param  Connection|null $db
      * @return array|null
      */
-    public function allArray()
+    public function allArray($db = null)
     {
-        return $this->asArray()->all();
+        return $this->asArray()->all($db);
     }
 }
