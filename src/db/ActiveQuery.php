@@ -5,6 +5,11 @@ namespace gunter1020\yii2\common\db;
 use gunter1020\yii2\common\db\ActiveRecord;
 use yii\db\ActiveQuery as DbActiveQuery;
 
+/**
+ * Extends Yii db ActiveQuery class.
+ *
+ * @property ActiveRecord $modelClass
+ */
 class ActiveQuery extends DbActiveQuery
 {
     /**
@@ -15,9 +20,11 @@ class ActiveQuery extends DbActiveQuery
      */
     public function valid($status = true)
     {
+        $class = $this->modelClass;
+
         return $status
-            ? $this->andWhere([ActiveRecord::SOFT_DELETE => ActiveRecord::IS_VALID])
-            : $this->andWhere([ActiveRecord::SOFT_DELETE => ActiveRecord::IS_INVALID]);
+            ? $this->andWhere([$class::SOFT_DELETE => $class::SD_VALID])
+            : $this->andWhere([$class::SOFT_DELETE => $class::SD_INVALID]);
     }
 
     /**

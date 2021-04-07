@@ -60,14 +60,14 @@ class ActiveRecord extends DbActiveRecord
     const SOFT_DELETE = 'is_deleted';
 
     /**
-     * @var string soft-delete valid value
+     * @var mixed soft-delete valid value
      */
-    const IS_VALID = false;
+    const SD_VALID = false;
 
     /**
-     * @var string soft-delete invalid value
+     * @var mixed soft-delete invalid value
      */
-    const IS_INVALID = true;
+    const SD_INVALID = true;
 
     /**
      * @inheritdoc
@@ -93,13 +93,13 @@ class ActiveRecord extends DbActiveRecord
 
         // created at
         if ($this->createdAtAttribute) {
-            $timestampAttributes[ActiveRecord::EVENT_BEFORE_INSERT] = $this->createdAtAttribute;
+            $timestampAttributes[ActiveRecord::EVENT_BEFORE_INSERT][] = $this->createdAtAttribute;
         }
 
         // updated at
         if ($this->updatedAtAttribute) {
-            $timestampAttributes[ActiveRecord::EVENT_BEFORE_INSERT] = $this->updatedAtAttribute;
-            $timestampAttributes[ActiveRecord::EVENT_BEFORE_UPDATE] = $this->updatedAtAttribute;
+            $timestampAttributes[ActiveRecord::EVENT_BEFORE_INSERT][] = $this->updatedAtAttribute;
+            $timestampAttributes[ActiveRecord::EVENT_BEFORE_UPDATE][] = $this->updatedAtAttribute;
         }
 
         // timestamp columns behavior
@@ -136,16 +136,16 @@ class ActiveRecord extends DbActiveRecord
         }
 
         // is delete
-        if (self::SOFT_DELETE) {
+        if (static::SOFT_DELETE) {
             // soft-delete behavior
             $behaviors['softDeleteAndRestore'] = [
                 'class' => SoftDeleteBehavior::class,
                 'replaceRegularDelete' => $this->replaceRegularDelete,
                 'softDeleteAttributeValues' => [
-                    self::SOFT_DELETE => self::IS_INVALID,
+                    static::SOFT_DELETE => static::SD_INVALID,
                 ],
                 'restoreAttributeValues' => [
-                    self::SOFT_DELETE => self::IS_VALID,
+                    static::SOFT_DELETE => static::SD_VALID,
                 ],
             ];
 
@@ -165,20 +165,6 @@ class ActiveRecord extends DbActiveRecord
         }
 
         return $behaviors;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        $rule = parent::rules();
-
-        if (self::SOFT_DELETE) {
-            $rule[] = [[self::SOFT_DELETE], 'in', 'range' => [self::IS_INVALID, self::IS_VALID]];
-        }
-
-        return $rule;
     }
 
     /**
