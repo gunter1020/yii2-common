@@ -93,13 +93,13 @@ class ActiveRecord extends DbActiveRecord
 
         // created at
         if ($this->createdAtAttribute) {
-            $timestampAttributes[ActiveRecord::EVENT_BEFORE_INSERT] = $this->createdAtAttribute;
+            $timestampAttributes[ActiveRecord::EVENT_BEFORE_INSERT][] = $this->createdAtAttribute;
         }
 
         // updated at
         if ($this->updatedAtAttribute) {
-            $timestampAttributes[ActiveRecord::EVENT_BEFORE_INSERT] = $this->updatedAtAttribute;
-            $timestampAttributes[ActiveRecord::EVENT_BEFORE_UPDATE] = $this->updatedAtAttribute;
+            $timestampAttributes[ActiveRecord::EVENT_BEFORE_INSERT][] = $this->updatedAtAttribute;
+            $timestampAttributes[ActiveRecord::EVENT_BEFORE_UPDATE][] = $this->updatedAtAttribute;
         }
 
         // timestamp columns behavior
