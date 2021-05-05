@@ -17,4 +17,30 @@ class Controller extends RestController
 
         return $behaviors;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function actions()
+    {
+        return [
+            'options' => [
+                'class' => OptionsAction::class,
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function verbs()
+    {
+        return [
+            'index' => ['GET', 'HEAD'],
+            'view' => ['GET', 'HEAD'],
+            'create' => ['POST'],
+            'update' => ['PUT', 'PATCH'],
+            'delete' => ['DELETE'],
+        ];
+    }
 }
