@@ -168,7 +168,7 @@ class ActiveRecord extends DbActiveRecord
     }
 
     /**
-     * @see vendor\yii2tech\ar-softdelete\src\SoftDeleteBehavior.php
+     * @see \yii2tech\ar\softdelete\SoftDeleteBehavior
      *
      * @throws InvalidConfigException
      * @return int|false
@@ -177,5 +177,20 @@ class ActiveRecord extends DbActiveRecord
     {
         $behavior = $this->getBehavior('softDeleteAndRestore');
         return ($behavior instanceof Behavior) ? $behavior->softDelete() : false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see https://github.com/yii2tech/ar-softdelete/issues/12
+     * @see \yii2tech\ar\softdelete\SoftDeleteBehavior beforeDelete()
+     */
+    protected function deleteInternal()
+    {
+        if ($this->replaceRegularDelete) {
+            $this->beforeDelete();
+            return true;
+        } else {
+            return parent::deleteInternal();
+        }
     }
 }
