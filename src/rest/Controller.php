@@ -3,6 +3,7 @@
 namespace gunter1020\yii2\common\rest;
 
 use yii\rest\Controller as RestController;
+use yii\rest\OptionsAction;
 
 class Controller extends RestController
 {
