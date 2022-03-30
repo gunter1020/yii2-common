@@ -193,4 +193,24 @@ class ActiveRecord extends DbActiveRecord
             return parent::deleteInternal();
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasMany($class, $link)
+    {
+        return static::SOFT_DELETE
+            ? parent::hasMany($class, $link)->andWhere([static::SOFT_DELETE => static::SD_VALID])
+            : parent::hasMany($class, $link);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasOne($class, $link)
+    {
+        return static::SOFT_DELETE
+            ? parent::hasOne($class, $link)->andWhere([static::SOFT_DELETE => static::SD_VALID])
+            : parent::hasOne($class, $link);
+    }
 }
