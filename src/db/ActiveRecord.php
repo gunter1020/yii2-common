@@ -74,6 +74,8 @@ class ActiveRecord extends DbActiveRecord
      */
     public function behaviors()
     {
+        $behaviors = parent::behaviors();
+
         // uuid
         if ($this->uuidAttribute) {
             $behaviors['presetCols'] = [
