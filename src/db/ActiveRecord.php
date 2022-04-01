@@ -17,42 +17,42 @@ class ActiveRecord extends DbActiveRecord
     /**
      * @var string|null field for uuid key
      */
-    protected $uuidAttribute = 'uuid';
+    protected ?string $uuidAttribute = 'uuid';
 
     /**
      * @var string|null auto field for created time
      */
-    protected $createdAtAttribute = 'created_at';
+    protected ?string $createdAtAttribute = 'created_at';
 
     /**
      * @var string|null auto field for created user
      */
-    protected $createdByAttribute = 'created_by';
+    protected ?string $createdByAttribute = 'created_by';
 
     /**
      * @var string|null auto field for updated time
      */
-    protected $updatedAtAttribute = 'updated_at';
+    protected ?string $updatedAtAttribute = 'updated_at';
 
     /**
      * @var string|null auto field for updated user
      */
-    protected $updatedByAttribute = 'updated_by';
+    protected ?string $updatedByAttribute = 'updated_by';
 
     /**
      * @var string|null auto field for deleted time (active at soft-delete isset)
      */
-    protected $deletedAtAttribute = 'deleted_at';
+    protected ?string $deletedAtAttribute = 'deleted_at';
 
     /**
      * @var string|null auto field for deleted user (active at soft-delete isset)
      */
-    protected $deletedByAttribute = 'deleted_by';
+    protected ?string $deletedByAttribute = 'deleted_by';
 
     /**
      * @var bool whether to perform soft delete instead of regular delete.
      */
-    protected $replaceRegularDelete = false;
+    protected bool $replaceRegularDelete = false;
 
     /**
      * @var string|null auto field for soft-delete
@@ -70,7 +70,7 @@ class ActiveRecord extends DbActiveRecord
     const SD_INVALID = true;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
