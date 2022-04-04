@@ -22,9 +22,13 @@ class ActiveQuery extends DbActiveQuery
     {
         $class = $this->modelClass;
 
-        return $status
-            ? $this->andWhere([$class::SOFT_DELETE => $class::SD_VALID])
-            : $this->andWhere([$class::SOFT_DELETE => $class::SD_INVALID]);
+        if ($class::SOFT_DELETE) {
+            return $status
+                ? $this->andWhere([$class::SOFT_DELETE => $class::SD_VALID])
+                : $this->andWhere([$class::SOFT_DELETE => $class::SD_INVALID]);
+        }
+
+        return $this;
     }
 
     /**
