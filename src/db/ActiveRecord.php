@@ -12,7 +12,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord as DbActiveRecord;
 
-class ActiveRecord extends DbActiveRecord
+abstract class ActiveRecord extends DbActiveRecord
 {
     /**
      * @var string|null field for uuid key
@@ -82,9 +82,7 @@ class ActiveRecord extends DbActiveRecord
                 'class' => AttributesBehavior::class,
                 'attributes' => [
                     $this->uuidAttribute => [
-                        ActiveRecord::EVENT_BEFORE_INSERT => function () {
-                            return Uuid::uuid1();
-                        },
+                        ActiveRecord::EVENT_BEFORE_INSERT => static::generatePkId(),
                     ],
                 ],
             ];
@@ -214,5 +212,15 @@ class ActiveRecord extends DbActiveRecord
         return static::SOFT_DELETE
             ? parent::hasOne($class, $link)->andWhere([static::SOFT_DELETE => static::SD_VALID])
             : parent::hasOne($class, $link);
+    }
+
+    /**
+     * Generate primary key id
+     *
+     * @return string
+     */
+    protected static function generatePkId(): string
+    {
+        return Uuid::uuid1()->toString();
     }
 }
