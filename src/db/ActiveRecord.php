@@ -199,8 +199,8 @@ abstract class ActiveRecord extends DbActiveRecord
      */
     public function hasMany($class, $link)
     {
-        return static::SOFT_DELETE
-            ? parent::hasMany($class, $link)->andWhere([static::SOFT_DELETE => static::SD_VALID])
+        return $class::SOFT_DELETE
+            ? parent::hasMany($class, $link)->andWhere([$class::SOFT_DELETE => $class::SD_VALID])
             : parent::hasMany($class, $link);
     }
 
@@ -209,8 +209,8 @@ abstract class ActiveRecord extends DbActiveRecord
      */
     public function hasOne($class, $link)
     {
-        return static::SOFT_DELETE
-            ? parent::hasOne($class, $link)->andWhere([static::SOFT_DELETE => static::SD_VALID])
+        return $class::SOFT_DELETE
+            ? parent::hasOne($class, $link)->andWhere([$class::SOFT_DELETE => $class::SD_VALID])
             : parent::hasOne($class, $link);
     }
 
