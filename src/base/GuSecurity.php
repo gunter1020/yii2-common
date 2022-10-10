@@ -23,7 +23,7 @@ use yii\base\Security;
  *
  * @author Gunter Chou <abcd2221925@gmail.com>
  */
-abstract class GuSecurity extends Security
+class GuSecurity extends Security
 {
     /**
      * 加解密金鑰
