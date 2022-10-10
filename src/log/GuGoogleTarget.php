@@ -16,7 +16,7 @@ use yii\log\Logger;
  *
  * @author Gunter Chou <abcd2221925@gmail.com>
  */
-abstract class GoogleTarget extends FileTarget
+class GuGoogleTarget extends FileTarget
 {
     public string $logFile = 'php://stderr';
     public bool $enableRotation = false;

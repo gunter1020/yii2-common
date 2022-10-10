@@ -79,6 +79,8 @@ return [
         PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff::class,
         // 禁用無用覆寫方法
         PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\UselessOverridingMethodSniff::class,
+        // 禁用一般類別
+        NunoMaduro\PhpInsights\Domain\Insights\ForbiddenNormalClasses::class,
     ],
 
     'config' => [],

@@ -10,13 +10,13 @@ use yii\db\ActiveRecord;
 
 /**
  * ActiveRecord 欄位資料加解密行為
- * 
+ *
  * ```php
  *  public function behaviors()
  *  {
  *      return [
  *          'encryptAttrs' => [
- *              'class' => \gunter1020\yii2\common\behaviors\EncryptBehavior::class,
+ *              'class' => \gunter1020\yii2\common\behaviors\GuEncryptBehavior::class,
  *              'attributes' => ['attribute_a', 'attribute_b'],
  *          ],
  *      ];
@@ -25,7 +25,7 @@ use yii\db\ActiveRecord;
  *
  * @author Gunter Chou <abcd2221925@gmail.com>
  */
-class EncryptBehavior extends Behavior
+class GuEncryptBehavior extends Behavior
 {
     /**
      * 加解密欄位

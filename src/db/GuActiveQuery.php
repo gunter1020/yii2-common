@@ -8,7 +8,7 @@ use yii\db\Connection;
 /**
  * Extends Yii db ActiveQuery class.
  *
- * @property ActiveRecord $modelClass
+ * @property GuActiveRecord $modelClass
  *
  * @author Gunter Chou <abcd2221925@gmail.com>
  */
@@ -43,7 +43,9 @@ abstract class GuActiveQuery extends ActiveQuery
     /**
      * Returns a single row of result.
      *
-     * @param Connection|null $db the DB connection used to create the DB command.
+     * @param ?Connection $db the DB connection used to create the DB command.
+     *
+     * @return ?array<mixed>
      */
     public function oneArray(?Connection $db = null): ?array
     {
@@ -53,7 +55,9 @@ abstract class GuActiveQuery extends ActiveQuery
     /**
      * Returns a multiple row of result.
      *
-     * @param  Connection|null $db the DB connection used to create the DB command.
+     * @param ?Connection $db the DB connection used to create the DB command.
+     *
+     * @return ?array<mixed>
      */
     public function allArray(?Connection $db = null): ?array
     {
