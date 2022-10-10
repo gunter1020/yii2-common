@@ -13,35 +13,21 @@ use yii\log\Logger;
 
 /**
  * GoogleTarget records log messages to Google Cloud Logging with GKE.
+ *
+ * @author Gunter Chou <abcd2221925@gmail.com>
  */
-class GoogleTarget extends FileTarget
+abstract class GoogleTarget extends FileTarget
 {
-    /**
-     * {@inheritDoc}
-     */
-    public $logFile = 'php://stderr';
-
-    /**
-     * {@inheritDoc}
-     */
-    public $enableRotation = false;
-
-    /**
-     * {@inheritDoc}
-     */
-    public $rotateByCopy = false;
+    public string $logFile = 'php://stderr';
+    public bool $enableRotation = false;
+    public bool $rotateByCopy = false;
 
     /**
      * Event UUID
-     *
-     * @var string
      */
-    private static $eventId = '';
+    private static string $eventId = '';
 
-    /**
-     * {@inheritDoc}
-     */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$eventId = Uuid::uuid6()->toString();
@@ -61,12 +47,13 @@ class GoogleTarget extends FileTarget
      * @see https://cloud.google.com/logging/docs/structured-logging#special-payload-fields
      * @see https://cloud.google.com/logging/docs/structured-logging
      *
-     * @param  $message
-     * @return array
+     * @param array<mixed> $message logging info
+     *
+     * @return array<string,array|string>
      */
-    protected function getGoogleLogEntry($message)
+    protected function getGoogleLogEntry(array $message): array
     {
-        list($text, $level, $category, $timestamp) = $message;
+        [$text, $level, $category, $timestamp] = $message;
 
         $sourceLocation = [];
 

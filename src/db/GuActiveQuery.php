@@ -2,23 +2,24 @@
 
 namespace gunter1020\yii2\common\db;
 
-use gunter1020\yii2\common\db\ActiveRecord;
-use yii\db\ActiveQuery as DbActiveQuery;
+use yii\db\ActiveQuery;
+use yii\db\Connection;
 
 /**
  * Extends Yii db ActiveQuery class.
  *
  * @property ActiveRecord $modelClass
+ *
+ * @author Gunter Chou <abcd2221925@gmail.com>
  */
-class ActiveQuery extends DbActiveQuery
+abstract class GuActiveQuery extends ActiveQuery
 {
     /**
      * Filter valid data
      *
-     * @param  bool     $status
-     * @return static
+     * @param bool $status data valid static
      */
-    public function valid($status = true)
+    public function valid(bool $status = true): static
     {
         $class = $this->modelClass;
 
@@ -33,10 +34,8 @@ class ActiveQuery extends DbActiveQuery
 
     /**
      * Filter invalid data
-     *
-     * @return static
      */
-    public function invalid()
+    public function invalid(): static
     {
         return $this->valid(false);
     }
@@ -44,10 +43,9 @@ class ActiveQuery extends DbActiveQuery
     /**
      * Returns a single row of result.
      *
-     * @param  Connection|null $db
-     * @return array|null
+     * @param Connection|null $db the DB connection used to create the DB command.
      */
-    public function oneArray($db = null)
+    public function oneArray(?Connection $db = null): ?array
     {
         return $this->asArray()->one($db);
     }
@@ -55,10 +53,9 @@ class ActiveQuery extends DbActiveQuery
     /**
      * Returns a multiple row of result.
      *
-     * @param  Connection|null $db
-     * @return array|null
+     * @param  Connection|null $db the DB connection used to create the DB command.
      */
-    public function allArray($db = null)
+    public function allArray(?Connection $db = null): ?array
     {
         return $this->asArray()->all($db);
     }
