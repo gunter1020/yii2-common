@@ -6,13 +6,21 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\filters\Cors;
 use yii\web\Response;
 
-class BehaviorsConfig
+/**
+ * Behaviors config library
+ *
+ * @author Gunter Chou <abcd2221925@gmail.com>
+ */
+final class BehaviorsConfig
 {
     /**
-     * @param  $behaviors
-     * @return array
+     * Set CORS bearer
+     *
+     * @param array<string,mixed> $behaviors the behavior configurations.
+     *
+     * @return array<string,array|string>
      */
-    public static function corsHttpBearer($behaviors)
+    public static function corsHttpBearer(array $behaviors): array
     {
         // remove authentication filter
         $auth = $behaviors['authenticator'];

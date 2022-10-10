@@ -2,21 +2,22 @@
 
 namespace gunter1020\yii2\common\rest;
 
-use yii\rest\Controller as RestController;
+use yii\rest\Controller;
 use yii\rest\OptionsAction;
 
-class Controller extends RestController
+/**
+ * Extends Yii rest Controller class.
+ *
+ * @author Gunter Chou <abcd2221925@gmail.com>
+ */
+abstract class GuController extends Controller
 {
     /**
      * {@inheritdoc}
      */
     public function behaviors()
     {
-        $behaviors = parent::behaviors();
-
-        $behaviors = BehaviorsConfig::corsHttpBearer($behaviors);
-
-        return $behaviors;
+        return BehaviorsConfig::corsHttpBearer(parent::behaviors());
     }
 
     /**

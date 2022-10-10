@@ -3,17 +3,37 @@
 namespace gunter1020\yii2\common\db;
 
 use Ramsey\Uuid\Uuid;
-use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 use yii\behaviors\AttributesBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord as DbActiveRecord;
+use yii\db\ActiveRecord;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
-abstract class ActiveRecord extends DbActiveRecord
+/**
+ * Extends Yii db ActiveRecord class.
+ *
+ * @author Gunter Chou <abcd2221925@gmail.com>
+ */
+abstract class GuActiveRecord extends ActiveRecord
 {
+    /**
+     * auto field for soft-delete
+     */
+    public const SOFT_DELETE = 'is_deleted';
+
+    /**
+     * soft-delete valid value
+     */
+    public const SD_VALID = false;
+
+    /**
+     * soft-delete invalid value
+     */
+    public const SD_INVALID = true;
+
     /**
      * @var string|null field for uuid key
      */
@@ -55,21 +75,6 @@ abstract class ActiveRecord extends DbActiveRecord
     protected bool $replaceRegularDelete = false;
 
     /**
-     * @var string|null auto field for soft-delete
-     */
-    const SOFT_DELETE = 'is_deleted';
-
-    /**
-     * @var mixed soft-delete valid value
-     */
-    const SD_VALID = false;
-
-    /**
-     * @var mixed soft-delete invalid value
-     */
-    const SD_INVALID = true;
-
-    /**
      * {@inheritdoc}
      */
     public function behaviors()
@@ -107,9 +112,7 @@ abstract class ActiveRecord extends DbActiveRecord
             $behaviors['timestampCols'] = [
                 'class' => TimestampBehavior::class,
                 'attributes' => $timestampAttributes,
-                'value' => function () {
-                    return Yii::$app->get('formatter')->asDatetime(time());
-                },
+                'value' => static fn () => Yii::$app->get('formatter')->asDatetime(time()),
             ];
         }
 
@@ -141,26 +144,18 @@ abstract class ActiveRecord extends DbActiveRecord
             $behaviors['softDeleteAndRestore'] = [
                 'class' => SoftDeleteBehavior::class,
                 'replaceRegularDelete' => $this->replaceRegularDelete,
-                'softDeleteAttributeValues' => [
-                    static::SOFT_DELETE => static::SD_INVALID,
-                ],
-                'restoreAttributeValues' => [
-                    static::SOFT_DELETE => static::SD_VALID,
-                ],
+                'softDeleteAttributeValues' => [static::SOFT_DELETE => static::SD_INVALID],
+                'restoreAttributeValues' => [static::SOFT_DELETE => static::SD_VALID],
             ];
 
             // deleted at
             if ($this->deletedAtAttribute) {
-                $behaviors['softDeleteAndRestore']['softDeleteAttributeValues'][$this->deletedAtAttribute] = function () {
-                    return Yii::$app->get('formatter')->asDatetime(time());
-                };
+                $behaviors['softDeleteAndRestore']['softDeleteAttributeValues'][$this->deletedAtAttribute] = static fn () => Yii::$app->get('formatter')->asDatetime(time());
             }
 
             // deleted by
             if ($this->deletedByAttribute) {
-                $behaviors['softDeleteAndRestore']['softDeleteAttributeValues'][$this->deletedByAttribute] = function () {
-                    return Yii::$app->has('user') ? Yii::$app->get('user')->getId() : null;
-                };
+                $behaviors['softDeleteAndRestore']['softDeleteAttributeValues'][$this->deletedByAttribute] = static fn () => Yii::$app->has('user') ? Yii::$app->get('user')->getId() : null;
             }
         }
 
@@ -171,27 +166,11 @@ abstract class ActiveRecord extends DbActiveRecord
      * @see \yii2tech\ar\softdelete\SoftDeleteBehavior
      *
      * @throws InvalidConfigException
-     * @return int|false
      */
-    public function softDelete()
+    public function softDelete(): int|false
     {
         $behavior = $this->getBehavior('softDeleteAndRestore');
-        return ($behavior instanceof Behavior) ? $behavior->softDelete() : false;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see https://github.com/yii2tech/ar-softdelete/issues/12
-     * @see \yii2tech\ar\softdelete\SoftDeleteBehavior beforeDelete()
-     */
-    protected function deleteInternal()
-    {
-        if ($this->replaceRegularDelete) {
-            $this->beforeDelete();
-            return true;
-        } else {
-            return parent::deleteInternal();
-        }
+        return $behavior instanceof Behavior ? $behavior->softDelete() : false;
     }
 
     /**
@@ -216,11 +195,24 @@ abstract class ActiveRecord extends DbActiveRecord
 
     /**
      * Generate primary key id
-     *
-     * @return string
      */
     protected static function generatePkId(): string
     {
         return Uuid::uuid1()->toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see https://github.com/yii2tech/ar-softdelete/issues/12
+     * @see \yii2tech\ar\softdelete\SoftDeleteBehavior beforeDelete()
+     */
+    protected function deleteInternal()
+    {
+        if ($this->replaceRegularDelete) {
+            $this->beforeDelete();
+            return true;
+        }
+        return parent::deleteInternal();
     }
 }
