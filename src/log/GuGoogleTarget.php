@@ -18,9 +18,9 @@ use yii\log\Logger;
  */
 class GuGoogleTarget extends FileTarget
 {
-    public string $logFile = 'php://stderr';
-    public bool $enableRotation = false;
-    public bool $rotateByCopy = false;
+    public $logFile = 'php://stderr';
+    public $enableRotation = false;
+    public $rotateByCopy = false;
 
     /**
      * Event UUID
