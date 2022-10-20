@@ -6,22 +6,19 @@ use Exception;
 use Ramsey\Uuid\Uuid;
 use Throwable;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\helpers\StringHelper;
 use yii\helpers\VarDumper;
-use yii\log\FileTarget;
 use yii\log\Logger;
+use yii\log\Target;
 
 /**
  * GoogleTarget records log messages to Google Cloud Logging with GKE.
  *
  * @author Gunter Chou <abcd2221925@gmail.com>
  */
-class GuGoogleTarget extends FileTarget
+class GuGoogleTarget extends Target
 {
-    public $logFile = 'php://stderr';
-    public $enableRotation = false;
-    public $rotateByCopy = false;
-
     /**
      * Event UUID
      */
@@ -36,9 +33,25 @@ class GuGoogleTarget extends FileTarget
     /**
      * {@inheritDoc}
      */
-    public function formatMessage($message)
+    public function export()
     {
-        return json_encode($this->getGoogleLogEntry($message));
+        $text = implode("\n", array_map([$this, 'getGoogleLogEntry'], $this->messages)) . "\n";
+
+        if (($fp = @fopen('php://stderr', 'a')) === false) {
+            throw new InvalidConfigException("Unable to append to log [php://stderr]");
+        }
+
+        // 設置排他鎖
+        @flock($fp, LOCK_EX);
+
+        // 寫入錯誤資訊
+        @fwrite($fp, $text);
+
+        // 釋放鎖定
+        @flock($fp, LOCK_UN);
+
+        // 釋放資源
+        @fclose($fp);
     }
 
     /**
@@ -48,10 +61,8 @@ class GuGoogleTarget extends FileTarget
      * @see https://cloud.google.com/logging/docs/structured-logging
      *
      * @param array<mixed> $message logging info
-     *
-     * @return array<string,array|string>
      */
-    protected function getGoogleLogEntry(array $message): array
+    protected function getGoogleLogEntry(array $message): string
     {
         [$text, $level, $category, $timestamp] = $message;
 
@@ -97,7 +108,7 @@ class GuGoogleTarget extends FileTarget
             $userId = '-';
         }
 
-        return [
+        return json_encode([
             'time' => date(DATE_RFC3339_EXTENDED, $timestamp),
             'severity' => strtoupper(Logger::getLevelName($level)),
             'message' => $text,
@@ -122,6 +133,6 @@ class GuGoogleTarget extends FileTarget
             'logging.googleapis.com/operation' => [
                 'category' => $category,
             ],
-        ];
+        ]);
     }
 }
