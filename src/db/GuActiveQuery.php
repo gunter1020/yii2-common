@@ -24,10 +24,9 @@ abstract class GuActiveQuery extends ActiveQuery
         $class = $this->modelClass;
 
         if ($class::SOFT_DELETE) {
-            $fullColumnName = $class::tableName() . '.' . $class::SOFT_DELETE;
-            return $status
-                ? $this->andWhere([$fullColumnName => $class::SD_VALID])
-                : $this->andWhere([$fullColumnName => $class::SD_INVALID]);
+            $fullColumnName = $class::softDeleteColumnName();
+            $isValid = $status ? $class::SD_VALID : $class::SD_INVALID;
+            return $this->andWhere([$fullColumnName => $isValid]);
         }
 
         return $this;
