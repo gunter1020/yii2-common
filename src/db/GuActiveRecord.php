@@ -174,13 +174,23 @@ abstract class GuActiveRecord extends ActiveRecord
     }
 
     /**
+     * Returns the name of the soft delete column with this AR class.
+     */
+    public static function softDeleteColumnName(): string
+    {
+        return static::tableName() . '.' . static::SOFT_DELETE;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function hasMany($class, $link)
     {
+        $query = parent::hasMany($class, $link);
+
         return $class::SOFT_DELETE
-            ? parent::hasMany($class, $link)->andWhere([$class::SOFT_DELETE => $class::SD_VALID])
-            : parent::hasMany($class, $link);
+            ? $query->andWhere([$class::softDeleteColumnName() => $class::SD_VALID])
+            : $query;
     }
 
     /**
@@ -188,9 +198,11 @@ abstract class GuActiveRecord extends ActiveRecord
      */
     public function hasOne($class, $link)
     {
+        $query = parent::hasOne($class, $link);
+
         return $class::SOFT_DELETE
-            ? parent::hasOne($class, $link)->andWhere([$class::SOFT_DELETE => $class::SD_VALID])
-            : parent::hasOne($class, $link);
+            ? $query->andWhere([$class::softDeleteColumnName() => $class::SD_VALID])
+            : $query;
     }
 
     /**
