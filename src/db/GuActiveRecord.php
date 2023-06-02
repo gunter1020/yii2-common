@@ -189,7 +189,7 @@ abstract class GuActiveRecord extends ActiveRecord
         $query = parent::hasMany($class, $link);
 
         return $class::SOFT_DELETE
-            ? $query->andWhere([$class::softDeleteColumnName() => $class::SD_VALID])
+            ? $query->andOnCondition([$class::softDeleteColumnName() => $class::SD_VALID])
             : $query;
     }
 
@@ -201,7 +201,7 @@ abstract class GuActiveRecord extends ActiveRecord
         $query = parent::hasOne($class, $link);
 
         return $class::SOFT_DELETE
-            ? $query->andWhere([$class::softDeleteColumnName() => $class::SD_VALID])
+            ? $query->andOnCondition([$class::softDeleteColumnName() => $class::SD_VALID])
             : $query;
     }
 
